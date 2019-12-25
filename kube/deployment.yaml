@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka-server
+spec:
+  replicas: 2
+  serviceName: 'discovery-server'
+  selector:
+    matchLabels:
+      app: eureka-peer
+  template:
+    metadata:
+      labels:
+        app: eureka-peer
+    spec:
+      containers:
+      - name: eureka-server
+        imagePullPolicy: IfNotPresent
+        image: 779820328082.dkr.ecr.us-east-2.amazonaws.com/kubelearn/eureka-server:latest
+        env:
+          - name: JAVA_OPTS
+            value: -Dserver.port=8762
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8762
